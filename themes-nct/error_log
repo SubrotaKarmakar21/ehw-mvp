@@ -1,0 +1,4 @@
+[08-Jan-2026 00:56:14 UTC] PHP Fatal error:  Uncaught Error: Class "MainTemplater" not found in /home/elevatehealthnct/public_html/themes-nct/theme.template.php:2
+Stack trace:
+#0 {main}
+  thrown in /home/elevatehealthnct/public_html/themes-nct/theme.template.php on line 2

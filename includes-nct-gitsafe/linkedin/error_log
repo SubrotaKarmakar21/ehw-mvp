@@ -1,0 +1,63 @@
+[17-Jul-2023 14:45:49 Asia/Kolkata] PHP Warning:  Undefined array key "code" in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 14
+[17-Jul-2023 14:45:49 Asia/Kolkata] PHP Warning:  Undefined array key "access_token" in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 33
+[17-Jul-2023 14:45:50 Asia/Kolkata] PHP Warning:  Undefined array key "id" in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 70
+[17-Jul-2023 14:45:50 Asia/Kolkata] PHP Warning:  Undefined array key "id" in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 71
+[17-Jul-2023 14:45:50 Asia/Kolkata] PHP Warning:  Undefined array key "firstName" in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 72
+[17-Jul-2023 14:45:50 Asia/Kolkata] PHP Warning:  Undefined array key "firstName" in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 73
+[17-Jul-2023 14:45:50 Asia/Kolkata] PHP Warning:  Trying to access array offset on value of type null in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 73
+[17-Jul-2023 14:45:50 Asia/Kolkata] PHP Warning:  Trying to access array offset on value of type null in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 73
+[17-Jul-2023 14:45:50 Asia/Kolkata] PHP Warning:  Undefined array key "lastName" in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 74
+[17-Jul-2023 14:45:50 Asia/Kolkata] PHP Warning:  Trying to access array offset on value of type null in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 74
+[17-Jul-2023 14:45:50 Asia/Kolkata] PHP Warning:  Trying to access array offset on value of type null in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 74
+[17-Jul-2023 14:45:50 Asia/Kolkata] PHP Warning:  Undefined array key "elements" in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 75
+[17-Jul-2023 14:45:50 Asia/Kolkata] PHP Warning:  Trying to access array offset on value of type null in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 75
+[17-Jul-2023 14:45:50 Asia/Kolkata] PHP Warning:  Trying to access array offset on value of type null in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 75
+[17-Jul-2023 14:45:50 Asia/Kolkata] PHP Warning:  Trying to access array offset on value of type null in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 75
+[17-Jul-2023 14:45:50 Asia/Kolkata] PHP Warning:  Undefined array key "profilePicture" in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 77
+[17-Jul-2023 14:45:50 Asia/Kolkata] PHP Warning:  Trying to access array offset on value of type null in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 77
+[17-Jul-2023 14:45:50 Asia/Kolkata] PHP Warning:  Trying to access array offset on value of type null in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 77
+[17-Jul-2023 14:45:50 Asia/Kolkata] PHP Warning:  Trying to access array offset on value of type null in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 77
+[17-Jul-2023 14:45:50 Asia/Kolkata] PHP Warning:  Trying to access array offset on value of type null in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 77
+[17-Jul-2023 14:45:50 Asia/Kolkata] PHP Warning:  Trying to access array offset on value of type null in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 77
+[17-Jul-2023 14:45:50 Asia/Kolkata] PHP Warning:  Trying to access array offset on value of type null in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 77
+[17-Jul-2023 14:46:58 Asia/Kolkata] PHP Warning:  Undefined array key "error" in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 7
+[17-Jul-2023 14:46:59 Asia/Kolkata] PHP Warning:  Undefined variable $th1 in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 112
+[17-Jul-2023 14:47:00 Asia/Kolkata] PHP Deprecated:  Constant FILTER_SANITIZE_STRING is deprecated in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 144
+[17-Jul-2023 14:47:01 Asia/Kolkata] PHP Warning:  Undefined variable $lastInsertId in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 223
+[20-Jul-2023 16:24:06 Asia/Kolkata] PHP Warning:  Undefined array key "error" in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 7
+[20-Jul-2023 16:24:07 Asia/Kolkata] PHP Warning:  Undefined array key "profilePicture" in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 77
+[20-Jul-2023 16:24:07 Asia/Kolkata] PHP Warning:  Trying to access array offset on value of type null in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 77
+[20-Jul-2023 16:24:07 Asia/Kolkata] PHP Warning:  Trying to access array offset on value of type null in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 77
+[20-Jul-2023 16:24:07 Asia/Kolkata] PHP Warning:  Trying to access array offset on value of type null in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 77
+[20-Jul-2023 16:24:07 Asia/Kolkata] PHP Warning:  Trying to access array offset on value of type null in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 77
+[20-Jul-2023 16:24:07 Asia/Kolkata] PHP Warning:  Trying to access array offset on value of type null in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 77
+[20-Jul-2023 16:24:07 Asia/Kolkata] PHP Warning:  Trying to access array offset on value of type null in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 77
+[20-Jul-2023 16:24:07 Asia/Kolkata] PHP Warning:  Undefined variable $th1 in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 112
+[20-Jul-2023 16:24:07 Asia/Kolkata] PHP Deprecated:  file_get_contents(): Passing null to parameter #1 ($filename) of type string is deprecated in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 134
+[20-Jul-2023 16:24:07 Asia/Kolkata] PHP Fatal error:  Uncaught ValueError: Path cannot be empty in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php:134
+Stack trace:
+#0 /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php(134): file_get_contents('')
+#1 {main}
+  thrown in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 134
+[11-Jan-2024 11:24:41 Asia/Kolkata] PHP Warning:  Undefined array key "code" in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 14
+[11-Jan-2024 11:24:41 Asia/Kolkata] PHP Warning:  Undefined array key "access_token" in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 33
+[11-Jan-2024 11:24:42 Asia/Kolkata] PHP Warning:  Undefined array key "id" in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 70
+[11-Jan-2024 11:24:42 Asia/Kolkata] PHP Warning:  Undefined array key "id" in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 71
+[11-Jan-2024 11:24:42 Asia/Kolkata] PHP Warning:  Undefined array key "firstName" in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 72
+[11-Jan-2024 11:24:42 Asia/Kolkata] PHP Warning:  Undefined array key "firstName" in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 73
+[11-Jan-2024 11:24:42 Asia/Kolkata] PHP Warning:  Trying to access array offset on value of type null in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 73
+[11-Jan-2024 11:24:42 Asia/Kolkata] PHP Warning:  Trying to access array offset on value of type null in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 73
+[11-Jan-2024 11:24:42 Asia/Kolkata] PHP Warning:  Undefined array key "lastName" in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 74
+[11-Jan-2024 11:24:42 Asia/Kolkata] PHP Warning:  Trying to access array offset on value of type null in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 74
+[11-Jan-2024 11:24:42 Asia/Kolkata] PHP Warning:  Trying to access array offset on value of type null in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 74
+[11-Jan-2024 11:24:42 Asia/Kolkata] PHP Warning:  Undefined array key "elements" in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 75
+[11-Jan-2024 11:24:42 Asia/Kolkata] PHP Warning:  Trying to access array offset on value of type null in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 75
+[11-Jan-2024 11:24:42 Asia/Kolkata] PHP Warning:  Trying to access array offset on value of type null in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 75
+[11-Jan-2024 11:24:42 Asia/Kolkata] PHP Warning:  Trying to access array offset on value of type null in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 75
+[11-Jan-2024 11:24:42 Asia/Kolkata] PHP Warning:  Undefined array key "profilePicture" in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 77
+[11-Jan-2024 11:24:42 Asia/Kolkata] PHP Warning:  Trying to access array offset on value of type null in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 77
+[11-Jan-2024 11:24:42 Asia/Kolkata] PHP Warning:  Trying to access array offset on value of type null in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 77
+[11-Jan-2024 11:24:42 Asia/Kolkata] PHP Warning:  Trying to access array offset on value of type null in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 77
+[11-Jan-2024 11:24:42 Asia/Kolkata] PHP Warning:  Trying to access array offset on value of type null in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 77
+[11-Jan-2024 11:24:42 Asia/Kolkata] PHP Warning:  Trying to access array offset on value of type null in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 77
+[11-Jan-2024 11:24:42 Asia/Kolkata] PHP Warning:  Trying to access array offset on value of type null in /home/products/public_html/nlance_v3_8/includes-nct/linkedin/callback.php on line 77

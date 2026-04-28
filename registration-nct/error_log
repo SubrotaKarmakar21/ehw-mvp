@@ -1,0 +1,137 @@
+[05-Jul-2023 15:48:54 Asia/Kolkata] PHP Fatal error:  Uncaught Error: Call to undefined function each() in /home/products/public_html/nlance_v3_8/includes-nct/functions-nct/class.smtp.php:388
+Stack trace:
+#0 /home/products/public_html/nlance_v3_8/includes-nct/functions-nct/class.phpmailer.php(719): SMTP->Data('Date: Wed, 5 Ju...')
+#1 /home/products/public_html/nlance_v3_8/includes-nct/functions-nct/class.phpmailer.php(539): PHPMailer->SmtpSend('Date: Wed, 5 Ju...', '<table border="...')
+#2 /home/products/public_html/nlance_v3_8/includes-nct/functions-nct/functions-nct.php(1716): PHPMailer->Send()
+#3 /home/products/public_html/nlance_v3_8/modules-nct/registration-nct/index.php(165): sendEmailAddress('malvika.ncrypte...', 'Registered suce...', '<table border="...')
+#4 {main}
+  thrown in /home/products/public_html/nlance_v3_8/includes-nct/functions-nct/class.smtp.php on line 388
+[05-Jul-2023 15:54:17 Asia/Kolkata] PHP Fatal error:  Uncaught Error: Call to undefined function each() in /home/products/public_html/nlance_v3_8/includes-nct/functions-nct/class.smtp.php:418
+Stack trace:
+#0 /home/products/public_html/nlance_v3_8/includes-nct/functions-nct/class.phpmailer.php(719): SMTP->Data('Date: Wed, 5 Ju...')
+#1 /home/products/public_html/nlance_v3_8/includes-nct/functions-nct/class.phpmailer.php(539): PHPMailer->SmtpSend('Date: Wed, 5 Ju...', '<table border="...')
+#2 /home/products/public_html/nlance_v3_8/includes-nct/functions-nct/functions-nct.php(1716): PHPMailer->Send()
+#3 /home/products/public_html/nlance_v3_8/modules-nct/registration-nct/index.php(165): sendEmailAddress('malvika.ncrypte...', 'Registered suce...', '<table border="...')
+#4 {main}
+  thrown in /home/products/public_html/nlance_v3_8/includes-nct/functions-nct/class.smtp.php on line 418
+[05-Jul-2023 17:07:41 Asia/Kolkata] PHP Parse error:  Unmatched '}' in /home/products/public_html/nlance_v3_8/includes-nct/functions-nct/functions-nct.php on line 1728
+[10-Dec-2025 18:34:15 Asia/Kolkata] PHP Fatal error:  Uncaught Error: Undefined constant "Signup" in /home/elevatehealthnct/public_html/modules-nct/registration-nct/ajax.registration-nct.php:7
+Stack trace:
+#0 {main}
+  thrown in /home/elevatehealthnct/public_html/modules-nct/registration-nct/ajax.registration-nct.php on line 7
+[10-Dec-2025 18:34:41 Asia/Kolkata] PHP Fatal error:  Uncaught Error: Undefined constant "Signup" in /home/elevatehealthnct/public_html/modules-nct/registration-nct/ajax.registration-nct.php:7
+Stack trace:
+#0 {main}
+  thrown in /home/elevatehealthnct/public_html/modules-nct/registration-nct/ajax.registration-nct.php on line 7
+[10-Dec-2025 18:35:07 Asia/Kolkata] PHP Fatal error:  Uncaught Error: Undefined constant "Signup" in /home/elevatehealthnct/public_html/modules-nct/registration-nct/ajax.registration-nct.php:7
+Stack trace:
+#0 {main}
+  thrown in /home/elevatehealthnct/public_html/modules-nct/registration-nct/ajax.registration-nct.php on line 7
+[10-Dec-2025 18:35:21 Asia/Kolkata] PHP Fatal error:  Uncaught Error: Undefined constant "Signup" in /home/elevatehealthnct/public_html/modules-nct/registration-nct/ajax.registration-nct.php:7
+Stack trace:
+#0 {main}
+  thrown in /home/elevatehealthnct/public_html/modules-nct/registration-nct/ajax.registration-nct.php on line 7
+[21-Dec-2025 14:49:26 Asia/Kolkata] PHP Fatal error:  Uncaught Error: Class "Google_Client" not found in /home/elevatehealthnct/public_html/modules-nct/registration-nct/index.php:57
+Stack trace:
+#0 {main}
+  thrown in /home/elevatehealthnct/public_html/modules-nct/registration-nct/index.php on line 57
+[21-Dec-2025 16:04:30 Asia/Kolkata] PHP Fatal error:  Uncaught Error: Failed opening required '/home/elevatehealthnct/public_html/includes-nct/google-api-php-client/vendor/composer/autoload_real.php' (include_path='.:/opt/alt/php80/usr/share/pear:/opt/alt/php80/usr/share/php:/usr/share/pear:/usr/share/php') in /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/vendor/autoload.php:23
+Stack trace:
+#0 /home/elevatehealthnct/public_html/modules-nct/registration-nct/index.php(6): require_once()
+#1 {main}
+  thrown in /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/vendor/autoload.php on line 23
+[21-Dec-2025 16:05:08 Asia/Kolkata] PHP Fatal error:  Uncaught Error: Failed opening required '/home/elevatehealthnct/public_html/includes-nct/google-api-php-client/vendor/composer/autoload_real.php' (include_path='.:/opt/alt/php80/usr/share/pear:/opt/alt/php80/usr/share/php:/usr/share/pear:/usr/share/php') in /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/vendor/autoload.php:23
+Stack trace:
+#0 /home/elevatehealthnct/public_html/modules-nct/registration-nct/index.php(6): require_once()
+#1 {main}
+  thrown in /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/vendor/autoload.php on line 23
+[22-Dec-2025 15:46:12 Asia/Kolkata] PHP Fatal error:  Uncaught Error: Failed opening required '/home/elevatehealthnct/public_html/includes-nct/google-api-php-client/vendor/composer/../ralouphie/getallheaders/src/getallheaders.php' (include_path='.:/opt/alt/php80/usr/share/pear:/opt/alt/php80/usr/share/php:/usr/share/pear:/usr/share/php') in /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/vendor/composer/autoload_real.php:78
+Stack trace:
+#0 /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/vendor/composer/autoload_real.php(61): composerRequirebfa1fc890e8c20fcdd2b5a62d4855567()
+#1 /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/vendor/autoload.php(7): ComposerAutoloaderInitbfa1fc890e8c20fcdd2b5a62d4855567::getLoader()
+#2 /home/elevatehealthnct/public_html/modules-nct/registration-nct/index.php(6): require_once('/home/elevatehe...')
+#3 {main}
+  thrown in /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/vendor/composer/autoload_real.php on line 78
+[22-Dec-2025 15:46:15 Asia/Kolkata] PHP Fatal error:  Uncaught Error: Failed opening required '/home/elevatehealthnct/public_html/includes-nct/google-api-php-client/vendor/composer/../ralouphie/getallheaders/src/getallheaders.php' (include_path='.:/opt/alt/php80/usr/share/pear:/opt/alt/php80/usr/share/php:/usr/share/pear:/usr/share/php') in /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/vendor/composer/autoload_real.php:78
+Stack trace:
+#0 /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/vendor/composer/autoload_real.php(61): composerRequirebfa1fc890e8c20fcdd2b5a62d4855567()
+#1 /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/vendor/autoload.php(7): ComposerAutoloaderInitbfa1fc890e8c20fcdd2b5a62d4855567::getLoader()
+#2 /home/elevatehealthnct/public_html/modules-nct/registration-nct/index.php(6): require_once('/home/elevatehe...')
+#3 {main}
+  thrown in /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/vendor/composer/autoload_real.php on line 78
+[22-Dec-2025 16:15:48 Asia/Kolkata] PHP Fatal error:  Uncaught Error: Failed opening required '/home/elevatehealthnct/public_html/includes-nct/google-api-php-client/vendor/composer/../ralouphie/getallheaders/src/getallheaders.php' (include_path='.:/opt/alt/php80/usr/share/pear:/opt/alt/php80/usr/share/php:/usr/share/pear:/usr/share/php') in /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/vendor/composer/autoload_real.php:78
+Stack trace:
+#0 /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/vendor/composer/autoload_real.php(61): composerRequirebfa1fc890e8c20fcdd2b5a62d4855567()
+#1 /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/vendor/autoload.php(7): ComposerAutoloaderInitbfa1fc890e8c20fcdd2b5a62d4855567::getLoader()
+#2 /home/elevatehealthnct/public_html/modules-nct/registration-nct/index.php(6): require_once('/home/elevatehe...')
+#3 {main}
+  thrown in /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/vendor/composer/autoload_real.php on line 78
+[22-Dec-2025 16:23:06 Asia/Kolkata] PHP Fatal error:  Uncaught Error: Failed opening required '/home/elevatehealthnct/public_html/includes-nct/google-api-php-client/vendor/composer/../symfony/polyfill-intl-normalizer/bootstrap.php' (include_path='.:/opt/alt/php80/usr/share/pear:/opt/alt/php80/usr/share/php:/usr/share/pear:/usr/share/php') in /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/vendor/composer/autoload_real.php:78
+Stack trace:
+#0 /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/vendor/composer/autoload_real.php(61): composerRequirebfa1fc890e8c20fcdd2b5a62d4855567()
+#1 /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/vendor/autoload.php(7): ComposerAutoloaderInitbfa1fc890e8c20fcdd2b5a62d4855567::getLoader()
+#2 /home/elevatehealthnct/public_html/modules-nct/registration-nct/index.php(6): require_once('/home/elevatehe...')
+#3 {main}
+  thrown in /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/vendor/composer/autoload_real.php on line 78
+[22-Dec-2025 16:40:18 Asia/Kolkata] PHP Fatal error:  Uncaught Error: Class "Google\Auth\Cache\MemoryCacheItemPool" not found in /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/src/Client.php:1146
+Stack trace:
+#0 /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/src/Client.php(1096): Google\Client->createDefaultCache()
+#1 /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/src/Client.php(799): Google\Client->getCache()
+#2 /home/elevatehealthnct/public_html/modules-nct/registration-nct/index.php(63): Google\Client->verifyIdToken()
+#3 {main}
+  thrown in /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/src/Client.php on line 1146
+[22-Dec-2025 19:04:51 Asia/Kolkata] PHP Fatal error:  Uncaught Error: Class "Google\Auth\Cache\MemoryCacheItemPool" not found in /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/src/Client.php:1146
+Stack trace:
+#0 /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/src/Client.php(1096): Google\Client->createDefaultCache()
+#1 /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/src/Client.php(799): Google\Client->getCache()
+#2 /home/elevatehealthnct/public_html/modules-nct/registration-nct/index.php(63): Google\Client->verifyIdToken()
+#3 {main}
+  thrown in /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/src/Client.php on line 1146
+[22-Dec-2025 19:05:44 Asia/Kolkata] PHP Fatal error:  Uncaught Error: Class "Google\Auth\Cache\MemoryCacheItemPool" not found in /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/src/Client.php:1146
+Stack trace:
+#0 /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/src/Client.php(1096): Google\Client->createDefaultCache()
+#1 /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/src/Client.php(799): Google\Client->getCache()
+#2 /home/elevatehealthnct/public_html/modules-nct/registration-nct/index.php(65): Google\Client->verifyIdToken()
+#3 {main}
+  thrown in /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/src/Client.php on line 1146
+[22-Dec-2025 19:08:46 Asia/Kolkata] PHP Fatal error:  Uncaught Error: Class "Google\Auth\Cache\MemoryCacheItemPool" not found in /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/src/Client.php:1146
+Stack trace:
+#0 /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/src/Client.php(1096): Google\Client->createDefaultCache()
+#1 /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/src/Client.php(799): Google\Client->getCache()
+#2 /home/elevatehealthnct/public_html/modules-nct/registration-nct/index.php(65): Google\Client->verifyIdToken()
+#3 {main}
+  thrown in /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/src/Client.php on line 1146
+[22-Dec-2025 19:09:51 Asia/Kolkata] PHP Fatal error:  Uncaught Error: Class "Google\Auth\Cache\MemoryCacheItemPool" not found in /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/src/Client.php:1146
+Stack trace:
+#0 /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/src/Client.php(1096): Google\Client->createDefaultCache()
+#1 /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/src/Client.php(799): Google\Client->getCache()
+#2 /home/elevatehealthnct/public_html/modules-nct/registration-nct/index.php(66): Google\Client->verifyIdToken()
+#3 {main}
+  thrown in /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/src/Client.php on line 1146
+[22-Dec-2025 13:41:38 UTC] PHP Parse error:  syntax error, unexpected double-quoted string "google-api-php-client/vendor/a..." in /home/elevatehealthnct/public_html/modules-nct/registration-nct/index.php on line 6
+[22-Dec-2025 19:11:57 Asia/Kolkata] PHP Fatal error:  Uncaught Error: Undefined constant "__DIR_INC__" in /home/elevatehealthnct/public_html/modules-nct/registration-nct/index.php:61
+Stack trace:
+#0 {main}
+  thrown in /home/elevatehealthnct/public_html/modules-nct/registration-nct/index.php on line 61
+[22-Dec-2025 19:13:53 Asia/Kolkata] PHP Fatal error:  Uncaught Error: Undefined constant "__DIR_INC__" in /home/elevatehealthnct/public_html/modules-nct/registration-nct/index.php:60
+Stack trace:
+#0 {main}
+  thrown in /home/elevatehealthnct/public_html/modules-nct/registration-nct/index.php on line 60
+[22-Dec-2025 19:16:06 Asia/Kolkata] PHP Fatal error:  Uncaught Error: Class "Google\Auth\Cache\MemoryCacheItemPool" not found in /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/src/Client.php:1146
+Stack trace:
+#0 /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/src/Client.php(1096): Google\Client->createDefaultCache()
+#1 /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/src/Client.php(799): Google\Client->getCache()
+#2 /home/elevatehealthnct/public_html/modules-nct/registration-nct/index.php(68): Google\Client->verifyIdToken()
+#3 {main}
+  thrown in /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/src/Client.php on line 1146
+[22-Dec-2025 19:17:40 Asia/Kolkata] PHP Fatal error:  Uncaught Error: Class "Google\Auth\Cache\MemoryCacheItemPool" not found in /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/src/Client.php:1146
+Stack trace:
+#0 /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/src/Client.php(1096): Google\Client->createDefaultCache()
+#1 /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/src/Client.php(799): Google\Client->getCache()
+#2 /home/elevatehealthnct/public_html/modules-nct/registration-nct/index.php(70): Google\Client->verifyIdToken()
+#3 {main}
+  thrown in /home/elevatehealthnct/public_html/includes-nct/google-api-php-client/src/Client.php on line 1146
+[24-Dec-2025 17:05:22 Asia/Kolkata] PHP Fatal error:  Uncaught Error: Undefined constant "Signup" in /home/elevatehealthnct/public_html/modules-nct/registration-nct/select-user-type.php:9
+Stack trace:
+#0 {main}
+  thrown in /home/elevatehealthnct/public_html/modules-nct/registration-nct/select-user-type.php on line 9
