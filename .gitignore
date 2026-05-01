@@ -1,2 +1,19 @@
-includes-nct-gitsafe/constant-nct.php
+includes-nct-gitsafe/
 
+vendor/
+
+upload-nct/
+
+# Editor backup files
+*.save*
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+error_log
+
+# OS junk
+.DS_Store
+Thumbs.db
