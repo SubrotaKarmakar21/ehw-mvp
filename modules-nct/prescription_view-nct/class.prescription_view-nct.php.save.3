@@ -1,0 +1,885 @@
+<?php
+
+class PrescriptionView {
+
+    public function __construct($module = "", $reqData = array()){
+        foreach ($GLOBALS as $key => $values) {
+            $this->$key = $values;
+        }
+
+        $this->module = $module;
+        $this->reqData = $reqData;
+    }
+
+    private function renderTemplate($template = null, $replace = []){
+    	$templateFile = $template ? $template : $this->module.".tpl.php";
+
+    	$filePath = DIR_TMPL.$this->module."/".$templateFile;
+
+    	if(!file_exists($filePath)){
+        	die("Template not found: ".$filePath);
+    	}
+
+    	$tpl = new MainTemplater($filePath);
+    	$tpl = $tpl->parse();
+
+    	return str_replace(array_keys($replace), array_values($replace), $tpl);
+    }
+
+    public function getPageContent($template = null){
+
+        global $db, $sessUserId;
+
+        $prescription_id = isset($_GET['prescription_id']) ? (int)$_GET['prescription_id'] : 0;
+
+        if($prescription_id <= 0){
+            return "Invalid Prescription";
+        }
+
+        $prescription = $db->pdoQuery("
+            SELECT id, doctor_id, appointment_id, vitals_json, complaints_json, diagnosis, medications_json, investigations_json, followup_json, general_advice, diet_plan, dos_donts_json, doctor_signature
+            FROM tbl_prescriptions
+            WHERE id = ".$prescription_id."
+            LIMIT 1
+        ")->result();
+
+        if(empty($prescription)){
+            return "Prescription not found";
+        }
+
+        $doctor = $db->pdoQuery("
+    		SELECT
+        	CONCAT(d.first_name,' ',d.last_name) AS doctor_name,
+        	GROUP_CONCAT(t.name SEPARATOR ', ') AS doctor_category,
+        	d.doctor_description,
+        	c.clinic_banner,
+		c.address,
+		c.phone_no
+
+    		FROM tbl_users d
+
+    		LEFT JOIN tbl_users c ON c.id = d.parent_id
+
+    		LEFT JOIN tbl_users_doctor_type udt ON udt.user_id = d.id
+
+    		LEFT JOIN tbl_type_of_doctors t ON t.id = udt.type_of_doctor_id
+
+    		WHERE d.id = ".$prescription['doctor_id']."
+    		GROUP BY d.id
+	")->result();
+
+        $doctorName = !empty($doctor) ? "Dr. ".$doctor['doctor_name'] : "Doctor";
+
+	$doctorCategory = "";
+
+	if(!empty($doctor['doctor_category'])){
+    		$categories = explode(", ", $doctor['doctor_category']);
+
+    		$categories = array_slice($categories, 0, 3);
+
+    		$doctorCategory = implode(", ", $categories);
+	}
+
+	$doctorDescription = !empty($doctor['doctor_description']) ? $doctor['doctor_description'] : "";
+
+	$doctorCategoryHtml = "";
+	if(!empty($doctorCategory)){
+    		$doctorCategoryHtml = '<div class="doctor-meta">'.$doctorCategory.'</div>';
+	}
+
+	$doctorDescriptionHtml = "";
+	if(!empty($doctorDescription)){
+    		$doctorDescriptionHtml = '<div class="doctor-desc">'.$doctorDescription.'</div>';
+	}
+
+	$clinicBanner = "";
+
+	if(!empty($doctor['clinic_banner'])){
+		$clinicBanner = SITE_UPD."clinicBanner-nct/".$doctor['clinic_banner'];
+	}
+
+	$clinicInfoHtml = "";
+
+	if(!empty($doctor['address'])){
+    		$clinicInfoHtml .= '<div class="clinic-address">'.$doctor['address'].'</div>';
+	}
+
+	if(!empty($doctor['phone_no'])){
+    		$clinicInfoHtml .= '<div class="clinic-phone"><b>Contact No:</b> '.$doctor['phone_no'].'</div>';
+	}
+
+	$appointment = $db->pdoQuery("
+    		SELECT first_name, last_name, gender, date_of_birth, created_date
+    		FROM tbl_appointment
+    		WHERE id = ".$prescription['appointment_id']."
+    		LIMIT 1
+	")->result();
+
+	$patientName = $appointment['first_name'].' '.$appointment['last_name'];
+
+	$gender = ucfirst($appointment['gender']);
+
+	$age = '';
+	$age_type = 'years';
+
+	if(!empty($appointment['date_of_birth'])){
+
+        	$dob = new DateTime($appointment['date_of_birth']);
+        	$now = new DateTime();
+
+        	$dob->setTime(0,0,0);
+        	$now->setTime(0,0,0);
+
+        	$diff = $now->diff($dob);
+
+        	if ($diff->y > 0) {
+                	$age = $diff->y;
+                	$age_type = 'years';
+        	} elseif ($diff->m > 0) {
+                	$age = $diff->m;
+                	$age_type = 'months';
+        	} else {
+                	$age = $diff->d;
+                	$age_type = 'days';
+        	}
+	}
+
+	$ageDisplay = '';
+
+	if($age !== ''){
+        	if($age_type == 'years'){
+                	$ageDisplay = $age . ' Y';
+        	} elseif($age_type == 'months'){
+                	$ageDisplay = $age . ' M';
+        	} else {
+                	$ageDisplay = $age . ' D';
+        	}
+	}
+
+	$date = date('d M Y', strtotime($appointment['created_date']));
+
+	$vitals = [];
+
+	if(!empty($prescription['vitals_json'])){
+    		$vitals = json_decode($prescription['vitals_json'], true);
+	}
+
+	$vitalsHtml = '';
+
+	if(!empty($vitals)){
+
+    		$labels = [
+        		'height' => ['Height', 'cm'],
+        		'weight' => ['Weight', 'kg'],
+        		'bmi' 	 => ['BMI', ''],
+        		'bp' 	 => ['Blood Pressure', 'mmHg'],
+        		'pulse'  => ['Pulse', 'bpm'],
+        		'rr' 	 => ['Respiratory Rate', '/min'],
+        		'spo2' 	 => ['O2 Saturation', '%']
+    		];
+
+    		foreach($vitals as $key => $value){
+
+        		if(trim($value) == ''){
+            			continue;
+        		}
+
+        		$label = isset($labels[$key]) ? $labels[$key][0] : ucfirst($key);
+        		$unit  = isset($labels[$key]) ? $labels[$key][1] : '';
+
+        		$vitalsHtml .= '
+            			<span class="vital-inline">
+                			<b>'.$label.':</b> '.$value.' '.$unit.'
+            			</span>
+        		';
+    		}
+	}
+
+	$complaintsHtml = '';
+
+	if(!empty($prescription['complaints_json'])){
+
+    		$complaints = json_decode($prescription['complaints_json'], true);
+
+    		if(!empty($complaints)){
+
+        		$first = true;
+
+        		foreach($complaints as $c){
+
+            			if(trim($c) == '') continue;
+
+				$text = htmlspecialchars($c);
+
+            			if($first){
+                			$complaintsHtml .= '<div class="complaint-line"><span class="complaint-label">Complaints:</span><span class="complaint-value">'.$text.'</span></div>';
+                			$first = false;
+            			} else {
+                			$complaintsHtml .= '<div class="complaint-line indent"><span class="complaint-value">'.$text.'</span></div>';
+            			}
+        		}
+    		}
+	}
+
+	$diagnosisHtml = '';
+
+	if(!empty(trim($prescription['diagnosis']))){
+
+		$diagnosisText = htmlspecialchars($prescription['diagnosis']);
+
+    		$diagnosisHtml = '<div class="diagnosis-line"><span class="diagnosis-label">Diagnosis:</span><span class="diagnosis-value">'.$diagnosisText.'</span></div>';
+	}
+
+	$medicationsHtml = '';
+
+	if(!empty($prescription['medications_json'])){
+
+    		$meds = json_decode($prescription['medications_json'], true);
+
+    		if(!empty($meds)){
+
+			$medicationsHtml .= '<div class="medications-row"><span class="label">Medications:</span></div>';
+
+        		$medicationsHtml .= '
+        			<table class="med-table">
+            				<thead>
+                				<tr>
+                    					<th>No</th>
+                    					<th>Medicine</th>
+                    					<th>M</th>
+                    					<th>A</th>
+                    					<th>E</th>
+                    					<th>N</th>
+                    					<th>Duration</th>
+                    					<th>Advice</th>
+							<th>Remarks</th>
+                				</tr>
+            				</thead>
+            			<tbody>
+        		';
+
+        		$i = 1;
+
+        		foreach($meds as $m){
+
+				$medicine = htmlspecialchars($m['medicine']);
+
+            			if(empty($m['medicine'])) continue;
+
+            			$morning   = $m['morning'] ?? '';
+            			$afternoon = $m['afternoon'] ?? '';
+            			$evening   = $m['evening'] ?? '';
+            			$night     = $m['night'] ?? '';
+
+            			$duration = '';
+            			if(!empty($m['duration'])){
+                			$duration = $m['duration'].' '.ucfirst($m['duration_type']);
+            			}
+
+            			$advice = $m['advise'] ?? '';
+
+				$remarks = $m['remarks'] ?? '';
+
+            			$medicationsHtml .= "
+                			<tr>
+                    				<td>{$i}</td>
+                    				<td>{$medicine}</td>
+                    				<td>{$morning}</td>
+                    				<td>{$afternoon}</td>
+                    				<td>{$evening}</td>
+                    				<td>{$night}</td>
+                    				<td>{$duration}</td>
+                    				<td>{$advice}</td>
+						<td>{$remarks}</td>
+                			</tr>
+            			";
+
+            			$i++;
+        		}
+
+        		$medicationsHtml .= '</tbody></table>';
+    		}
+	}
+
+	$investigationHtml = '';
+
+	if(!empty($prescription['investigations_json'])){
+
+    		$investigations = json_decode($prescription['investigations_json'], true);
+
+    		if(!empty($investigations)){
+
+        		$items = [];
+
+        		foreach($investigations as $inv){
+            			if(trim($inv) == '') continue;
+            			$items[] = htmlspecialchars($inv);
+        		}
+
+        		if(!empty($items)){
+
+            			$first = true;
+
+            			foreach($items as $item){
+
+                			if($first){
+						$investigationHtml .= '<div class="investigation-line"><span class="investigation-label">Investigations:</span><span class="investigation-value">'.$item.'</span></div>';
+                    				$first = false;
+                			} else {
+						$investigationHtml .= '<div class="investigation-line indent"><span class="investigation-value">'.$item.'</span></div>';
+                			}
+            			}
+        		}
+    		}
+	}
+
+	$followupHtml = '';
+
+	if(!empty($prescription['followup_json'])){
+
+    		$followup = json_decode($prescription['followup_json'], true);
+
+    		if(!empty($followup)){
+
+        		$date  = !empty($followup['date']) ? date('d M Y', strtotime($followup['date'])) : '';
+        		$notes = !empty(trim($followup['notes'])) ? htmlspecialchars($followup['notes']) : '';
+
+        		if($date || $notes){
+
+            			$first = true;
+
+            			if($date){
+                			$followupHtml .= '<div class="followup-line"><span class="followup-label">Follow-up:</span><span class="followup-value">'.$date.'</span></div>';
+
+                			$first = false;
+            			}
+
+            			if($notes){
+                			if($first){
+                    				$followupHtml .= '<div class="followup-line"><span class="followup-label">Follow-up:</span><span class="followup-value">'.$notes.'</span></div>';
+                			} else {
+                    				$followupHtml .= '<div class="followup-line indent"><span class="followup-value">'.$notes.'</span></div>';
+                			}
+            			}
+        		}
+    		}
+	}
+
+	$generalAdviceHtml = '';
+
+	if(!empty(trim($prescription['general_advice']))){
+
+    		$advice = htmlspecialchars($prescription['general_advice']);
+
+    		$generalAdviceHtml = '<div class="general-advice-line"><span class="general-advice-label">General Advice:</span><span class="general-advice-value">'.$advice.'</span></div>';
+	}
+
+	$dietHtml = '';
+
+	if(!empty(trim($prescription['diet_plan']))){
+
+    		$dietText = nl2br(htmlspecialchars($prescription['diet_plan']));
+
+    		$dietHtml = '<div class="diet-line"><span class="diet-label">Diet Plan:</span><span class="diet-value">'.$dietText.'</span></div>';
+	}
+
+	$dosDontsHtml = '';
+
+	if(!empty($prescription['dos_donts_json'])){
+
+		$data = json_decode($prescription['dos_donts_json'], true);
+
+		$dos = $data['dos'] ?? [];
+		$donts = $data['donts'] ?? [];
+
+		// remove empty values
+		$dos = array_filter($dos, fn($d) => trim($d) !== '');
+		$donts = array_filter($donts, fn($d) => trim($d) !== '');
+
+		if(!empty($dos) || !empty($donts)){
+
+    			$max = max(count($dos), count($donts));
+
+    			$dosDontsHtml .= '<div class="dosdonts-row"><span class="label">Do’s & Don’ts:</span></div>
+
+        			<table class="dosdonts-table">
+            				<thead>
+                				<tr>
+                    					<th>Do’s</th>
+                    					<th>Don’ts</th>
+                				</tr>
+            				</thead>
+            			<tbody>
+    			';
+
+    			for($i = 0; $i < $max; $i++){
+
+        			$doItem = isset($dos[$i]) ? htmlspecialchars($dos[$i]) : '';
+        			$dontItem = isset($donts[$i]) ? htmlspecialchars($donts[$i]) : '';
+
+        			$dosDontsHtml .= "
+            				<tr>
+                				<td>".($doItem ? '• '.$doItem : '')."</td>
+                				<td>".($dontItem ? '• '.$dontItem : '')."</td>
+            				</tr>
+        			";
+    			}
+
+    			$dosDontsHtml .= '</tbody></table>';
+		}
+
+	}
+
+	$signatureHtml = '';
+
+	if(!empty(trim($prescription['doctor_signature']))){
+
+		$signatureHtml = '
+    			<div class="signature-wrapper">
+
+        			<div class="signature-image">
+            				<img src="'.$prescription['doctor_signature'].'" alt="Doctor Signature">
+        			</div>
+
+        			<div class="signature-name">'.$doctorName.'</div>
+
+    			</div>
+		';
+
+	}
+
+	$printMode = (isset($_GET['action']) && $_GET['action'] == 'print');
+
+	$printButtonHtml = '';
+
+	if(!$printMode){
+    		$printButtonHtml = '
+        		<div class="text-center print-button-wrapper">
+            			<a href="?prescription_id='.$prescription_id.'&action=print" class="btn btn-ehw-green print-btn">Print Prescription</a>
+        		</div>
+    		';
+	}
+
+        $replace = array(
+	    "%PRESCRIPTION_ID%"		=> $prescription_id,
+            "%DOCTOR_NAME%" 		=> $doctorName,
+	    "%DOCTOR_CATEGORY%"		=> $doctorCategoryHtml,
+	    "%DOCTOR_DESCRIPTION%"	=> $doctorDescriptionHtml,
+	    "%CLINIC_BANNER%"		=> $clinicBanner,
+	    "%CLINIC_INFO%"		=> $clinicInfoHtml,
+	    "%PATIENT_NAME%" 		=> $patientName,
+	    "%PATIENT_AGE%" 		=> $ageDisplay,
+	    "%PATIENT_GENDER%" 		=> $gender,
+	    "%PRESCRIPTION_DATE%" 	=> $date,
+	    "%VITALS%"			=> $vitalsHtml,
+	    "%COMPLAINTS%"		=> $complaintsHtml,
+	    "%DIAGNOSIS%"		=> $diagnosisHtml,
+	    "%MEDICATIONS%"		=> $medicationsHtml,
+	    "%INVESTIGATIONS%"		=> $investigationHtml,
+	    "%FOLLOWUP%"		=> $followupHtml,
+	    "%GENERAL_ADVICE%"		=> $generalAdviceHtml,
+	    "%DIET_PLAN%"		=> $dietHtml,
+	    "%DOS_DONTS%"		=> $dosDontsHtml,
+	    "%DOCTOR_SIGNATURE%"	=> $signatureHtml,
+	    "%PRINT_BUTTON_HTML%"	=> $printButtonHtml
+        );
+
+	$tpl = $this->renderTemplate($template, $replace);
+
+	/* PRINT MODE */
+	if($printMode){
+
+    		if (ob_get_length()) ob_clean();
+
+    		require_once $_SERVER['DOCUMENT_ROOT'].'/vendor/autoload.php';
+
+		// PDF SAFE HTML
+
+		$complaintsHtmlPdf = '';
+
+		if(!empty($prescription['complaints_json'])){
+    			$complaints = json_decode($prescription['complaints_json'], true);
+
+    			if(!empty($complaints)){
+        			$complaintsHtmlPdf .= '<table width="100%" style="font-size:15px;">';
+
+        			$first = true;
+
+        			foreach($complaints as $c){
+            				if(trim($c) == '') continue;
+
+            				$text = htmlspecialchars($c);
+
+            				if($first){
+                				$complaintsHtmlPdf .= '
+                    					<tr>
+                        					<td width="125"><b>Complaints:</b></td>
+                        					<td>'.$text.'</td>
+                    					</tr>
+                				';
+                				$first = false;
+            				} else {
+                				$complaintsHtmlPdf .= '
+                    					<tr>
+                        					<td width="125"></td>
+                        					<td>'.$text.'</td>
+                    					</tr>
+                				';
+            				}
+        			}
+
+        			$complaintsHtmlPdf .= '</table>';
+    			}
+		}
+
+		$diagnosisHtmlPdf = '';
+
+		if(!empty(trim($prescription['diagnosis']))){
+    			$diagnosisText = htmlspecialchars($prescription['diagnosis']);
+
+    			$diagnosisHtmlPdf = '
+        			<table width="100%" style="font-size:15px; margin-top:5px;">
+            				<tr>
+                				<td width="125"><b>Diagnosis:</b></td>
+                				<td>'.$diagnosisText.'</td>
+            				</tr>
+        			</table>
+    			';
+		}
+
+		$investigationHtmlPdf = '';
+
+		if(!empty($prescription['investigations_json'])){
+    			$investigations = json_decode($prescription['investigations_json'], true);
+
+    			if(!empty($investigations)){
+        			$investigationHtmlPdf .= '<table width="100%" style="font-size:15px;">';
+
+        			$first = true;
+
+        			foreach($investigations as $inv){
+            				if(trim($inv) == '') continue;
+
+            				$text = htmlspecialchars($inv);
+
+            				if($first){
+                				$investigationHtmlPdf .= '
+                    				<tr>
+                        				<td width="125"><b>Investigations:</b></td>
+                        				<td>'.$text.'</td>
+                    				</tr>
+                			';
+                			$first = false;
+            				} else {
+                				$investigationHtmlPdf .= '
+                   	 				<tr>
+                        					<td width="125"></td>
+                        					<td>'.$text.'</td>
+                    					</tr>
+                				';
+            				}
+        			}
+
+        			$investigationHtmlPdf .= '</table>';
+    			}
+		}
+
+		$medicationsHtmlPdf = '';
+
+		if(!empty($prescription['medications_json'])){
+
+    			$meds = json_decode($prescription['medications_json'], true);
+
+    			if(!empty($meds)){
+
+        			$medicationsHtmlPdf .= '<div style="margin-top:12px; margin-bottom:5px; font-size:15px;"><b>Medications:</b></div>';
+
+        			$medicationsHtmlPdf .= '
+            				<table class="med-table">
+                				<thead>
+                    					<tr>
+                        					<th>No</th>
+                        					<th>Medicine</th>
+                        					<th>M</th>
+                        					<th>A</th>
+                        					<th>E</th>
+                        					<th>N</th>
+                        					<th>Duration</th>
+                        					<th>Advice</th>
+                        					<th>Remarks</th>
+                    					</tr>
+                				</thead>
+               				<tbody>
+        			';
+
+        			$i = 1;
+
+        			foreach($meds as $m){
+
+            				if(empty($m['medicine'])) continue;
+
+            				$medicine  = htmlspecialchars($m['medicine']);
+            				$morning   = $m['morning'] ?? '';
+            				$afternoon = $m['afternoon'] ?? '';
+            				$evening   = $m['evening'] ?? '';
+            				$night     = $m['night'] ?? '';
+					$duration  = '';
+
+            				if(!empty($m['duration'])){
+                				$duration = $m['duration'].' '.ucfirst($m['duration_type']);
+            				}
+
+            				$advice 	= $m['advise'] ?? '';
+            				$remarks 	= $m['remarks'] ?? '';
+
+            				$medicationsHtmlPdf .= "
+                				<tr>
+                    					<td>{$i}</td>
+                    					<td>{$medicine}</td>
+                    					<td>{$morning}</td>
+                    					<td>{$afternoon}</td>
+                   					<td>{$evening}</td>
+                    					<td>{$night}</td>
+                    					<td>{$duration}</td>
+                    					<td>{$advice}</td>
+                    					<td>{$remarks}</td>
+                				</tr>
+            				";
+
+            				$i++;
+        			}
+
+        			$medicationsHtmlPdf .= '</tbody></table>';
+    			}
+		}
+
+		$followupHtmlPdf = '';
+
+		if(!empty($prescription['followup_json'])){
+    			$followup = json_decode($prescription['followup_json'], true);
+
+    			$date  = !empty($followup['date']) ? date('d M Y', strtotime($followup['date'])) : '';
+    			$notes = !empty(trim($followup['notes'])) ? htmlspecialchars($followup['notes']) : '';
+
+    			if($date || $notes){
+        			$followupHtmlPdf .= '<table width="100%" style="font-size:15px;">';
+
+        			if($date){
+            				$followupHtmlPdf .= '
+                				<tr>
+                    					<td width="125"><b>Follow-up:</b></td>
+                    					<td>'.$date.'</td>
+                				</tr>
+            				';
+        			}
+
+        			if($notes){
+            				$followupHtmlPdf .= '
+                				<tr>
+                    					<td width="125"></td>
+                    					<td>'.$notes.'</td>
+                				</tr>
+            				';
+        			}
+
+        			$followupHtmlPdf .= '</table>';
+    			}
+		}
+
+		$generalAdviceHtmlPdf = '';
+
+		if(!empty(trim($prescription['general_advice']))){
+    			$advice = nl2br(htmlspecialchars($prescription['general_advice']));
+
+    			$generalAdviceHtmlPdf = '
+        			<table width="100%" style="font-size:15px; margin-top:5px;">
+            				<tr>
+                				<td width="125" valign="top"><b>General Advice:</b></td>
+                				<td>'.$advice.'</td>
+            				</tr>
+        			</table>
+    			';
+		}
+
+		$dietHtmlPdf = '';
+
+		if(!empty(trim($prescription['diet_plan']))){
+    			$dietText = nl2br(htmlspecialchars($prescription['diet_plan']));
+
+    			$dietHtmlPdf = '
+        			<table width="100%" style="font-size:15px; margin-top:5px;">
+            				<tr>
+                				<td width="125" valign="top"><b>Diet Plan:</b></td>
+                				<td>'.$dietText.'</td>
+            				</tr>
+        			</table>
+    			';
+		}
+
+		$dosDontsHtmlPdf = '';
+
+		if(!empty($prescription['dos_donts_json'])){
+
+    			$data = json_decode($prescription['dos_donts_json'], true);
+
+    			$dos = $data['dos'] ?? [];
+    			$donts = $data['donts'] ?? [];
+
+    			$dos = array_filter($dos, fn($d) => trim($d) !== '');
+    			$donts = array_filter($donts, fn($d) => trim($d) !== '');
+
+    			if(!empty($dos) || !empty($donts)){
+
+        			$dosDontsHtmlPdf .= '<div style="margin-top:12px; margin-bottom:5px; font-size:15px;"><b>Do’s & Don’ts:</b></div>';
+
+        			$dosDontsHtmlPdf .= '
+            				<table class="dosdonts-table">
+                				<thead>
+                    					<tr>
+                        					<th>Do’s</th>
+                        					<th>Don’ts</th>
+                    					</tr>
+                				</thead>
+                			<tbody>
+        			';
+
+        			$max = max(count($dos), count($donts));
+
+        			for($i = 0; $i < $max; $i++){
+
+            				$doItem = isset($dos[$i]) ? htmlspecialchars($dos[$i]) : '';
+            				$dontItem = isset($donts[$i]) ? htmlspecialchars($donts[$i]) : '';
+
+            				$dosDontsHtmlPdf .= "
+                				<tr>
+                    					<td>".($doItem ? '• '.$doItem : '')."</td>
+                    					<td>".($dontItem ? '• '.$dontItem : '')."</td>
+                				</tr>
+            				";
+        			}
+
+        			$dosDontsHtmlPdf .= '</tbody></table>';
+    			}
+		}
+
+		$signatureHtmlPdf = '';
+
+		if(!empty(trim($prescription['doctor_signature']))){
+
+    			$signatureHtmlPdf = '
+        			<div style="margin-top:60px; width:100%; text-align:right;">
+
+            				<div>
+                				<img src="'.$prescription['doctor_signature'].'" style="height:60px;">
+            				</div>
+
+            				<div style="width:180px;border-top:1px solid #000;margin-top:10px;margin-left:auto;"></div>
+
+            				<div style="margin-top:6px;font-size:14px;font-weight:bold;">'.$doctorName.'</div>
+
+        			</div>
+    			';
+		}
+
+		$replacePdf = $replace;
+
+		$replacePdf["%COMPLAINTS%"] 		= $complaintsHtmlPdf;
+		$replacePdf["%DIAGNOSIS%"] 		= $diagnosisHtmlPdf;
+		$replacePdf["%INVESTIGATIONS%"] 	= $investigationHtmlPdf;
+		$replacePdf["%MEDICATIONS%"]		= $medicationsHtmlPdf;
+		$replacePdf["%FOLLOWUP%"] 		= $followupHtmlPdf;
+		$replacePdf["%GENERAL_ADVICE%"] 	= $generalAdviceHtmlPdf;
+		$replacePdf["%DIET_PLAN%"] 		= $dietHtmlPdf;
+		$replacePdf["%DOS_DONTS%"]		= $dosDontsHtmlPdf;
+		$replacePdf["%DOCTOR_SIGNATURE%"] 	= $signatureHtmlPdf;
+
+    		// USE PDF TEMPLATE
+    		$html = $this->renderTemplate("prescription_pdf-nct.tpl.php", $replacePdf);
+
+    		$mpdf = new \Mpdf\Mpdf([
+        		'mode'          => 'utf-8',
+        		'format'        => 'A4',
+        		'tempDir'       => $_SERVER['DOCUMENT_ROOT'].'/tmp',
+        		'margin_top'    => 15,
+        		'margin_bottom' => 20,
+        		'margin_left'   => 10,
+        		'margin_right'  => 10
+    		]);
+
+    		$mpdf->SetHTMLFooter('
+    			<div style="border-top:2px solid #999; margin-bottom:5px;"></div>
+
+    			<table width="100%" style="font-size:10px;">
+        			<tr>
+            				<td align="left">
+                				Powered by Elevate Health World
+            				</td>
+            				<td align="right">
+                				www.elevatehealthworld.com
+            				</td>
+        			</tr>
+    			</table>
+		');
+
+    		$stylesheet = file_get_contents($_SERVER['DOCUMENT_ROOT'].'/themes-nct/css-nct/style-nct.css');
+
+		$pdfCSS = '
+			body {
+    				font-family: DejaVu Sans, sans-serif;
+    				font-size: 14px;
+    				color: #333;
+			}
+
+			.med-table {
+    				width: 100%;
+    				border-collapse: collapse;
+    				font-size: 13px;
+    				margin-top: 5px;
+				margin-bottom: 10px;
+			}
+
+			.med-table th,
+			.med-table td {
+    				border: 1px solid #000;
+    				padding: 6px;
+    				text-align: center;
+			}
+
+			.med-table th {
+   				background: #f8f8f8;
+    				font-weight: bold;
+			}
+
+			.med-table td:nth-child(2) {
+    				text-align: left;
+			}
+
+			.dosdonts-table {
+   				width: 100%;
+    				border-collapse: collapse;
+    				font-size: 14px;
+				margin-top:5px;
+			}
+
+			.dosdonts-table th,
+			.dosdonts-table td {
+    				border: 1px solid #000;
+    				padding: 6px;
+			}
+
+			.dosdonts-table th {
+    				background: #f8f8f8;
+    				text-align: center;
+			}
+		';
+
+		$mpdf->WriteHTML('<style>'.$pdfCSS.'</style>',1);
+		$mpdf->WriteHTML($html,2);
+
+    		$mpdf->Output('prescription.pdf', 'I');
+    		exit;
+	}
+
+	return $tpl;
+    }
+}

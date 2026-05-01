@@ -1,0 +1,315 @@
+<?php
+
+class PrescriptionView {
+
+    public function __construct($module = "", $reqData = array()){
+        foreach ($GLOBALS as $key => $values) {
+            $this->$key = $values;
+        }
+
+        $this->module = $module;
+        $this->reqData = $reqData;
+    }
+
+    public function getPageContent(){
+
+        global $db, $sessUserId;
+
+        $prescription_id = isset($_GET['prescription_id']) ? (int)$_GET['prescription_id'] : 0;
+
+        if($prescription_id <= 0){
+            return "Invalid Prescription";
+        }
+
+        $prescription = $db->pdoQuery("
+            SELECT doctor_id, appointment_id, vitals_json, complaints_json, diagnosis, medications_json, investigations_json
+            FROM tbl_prescriptions
+            WHERE id = ".$prescription_id."
+            LIMIT 1
+        ")->result();
+
+        if(empty($prescription)){
+            return "Prescription not found";
+        }
+
+        $doctor = $db->pdoQuery("
+    		SELECT
+        	CONCAT(d.first_name,' ',d.last_name) AS doctor_name,
+        	GROUP_CONCAT(t.name SEPARATOR ', ') AS doctor_category,
+        	d.doctor_description,
+        	c.clinic_banner,
+		c.address,
+		c.phone_no
+
+    		FROM tbl_users d
+
+    		LEFT JOIN tbl_users c ON c.id = d.parent_id
+
+    		LEFT JOIN tbl_users_doctor_type udt ON udt.user_id = d.id
+
+    		LEFT JOIN tbl_type_of_doctors t ON t.id = udt.type_of_doctor_id
+
+    		WHERE d.id = ".$prescription['doctor_id']."
+    		GROUP BY d.id
+	")->result();
+
+        $doctorName = !empty($doctor) ? "Dr. ".$doctor['doctor_name'] : "Doctor";
+
+	$doctorCategory = "";
+
+	if(!empty($doctor['doctor_category'])){
+    		$categories = explode(", ", $doctor['doctor_category']);
+
+    		$categories = array_slice($categories, 0, 3);
+
+    		$doctorCategory = implode(", ", $categories);
+	}
+
+	$doctorDescription = !empty($doctor['doctor_description']) ? $doctor['doctor_description'] : "";
+
+	$doctorCategoryHtml = "";
+	if(!empty($doctorCategory)){
+    		$doctorCategoryHtml = '<div class="doctor-meta">'.$doctorCategory.'</div>';
+	}
+
+	$doctorDescriptionHtml = "";
+	if(!empty($doctorDescription)){
+    		$doctorDescriptionHtml = '<div class="doctor-desc">'.$doctorDescription.'</div>';
+	}
+
+	$clinicBanner = "";
+
+	if(!empty($doctor['clinic_banner'])){
+		$clinicBanner = SITE_UPD."clinicBanner-nct/".$doctor['clinic_banner'];
+	}
+
+	$clinicInfoHtml = "";
+
+	if(!empty($doctor['address'])){
+    		$clinicInfoHtml .= '<div class="clinic-address">'.$doctor['address'].'</div>';
+	}
+
+	if(!empty($doctor['phone_no'])){
+    		$clinicInfoHtml .= '<div class="clinic-phone"><b>Contact No:</b> '.$doctor['phone_no'].'</div>';
+	}
+
+	$appointment = $db->pdoQuery("
+    		SELECT first_name, last_name, gender, date_of_birth, created_date
+    		FROM tbl_appointment
+    		WHERE id = ".$prescription['appointment_id']."
+    		LIMIT 1
+	")->result();
+
+	$patientName = $appointment['first_name'].' '.$appointment['last_name'];
+
+	$gender = ucfirst($appointment['gender']);
+
+	$age = '';
+	$age_type = 'years';
+
+	if(!empty($appointment['date_of_birth'])){
+
+        	$dob = new DateTime($appointment['date_of_birth']);
+        	$now = new DateTime();
+
+        	$dob->setTime(0,0,0);
+        	$now->setTime(0,0,0);
+
+        	$diff = $now->diff($dob);
+
+        	if ($diff->y > 0) {
+                	$age = $diff->y;
+                	$age_type = 'years';
+        	} elseif ($diff->m > 0) {
+                	$age = $diff->m;
+                	$age_type = 'months';
+        	} else {
+                	$age = $diff->d;
+                	$age_type = 'days';
+        	}
+	}
+
+	$ageDisplay = '';
+
+	if($age !== ''){
+        	if($age_type == 'years'){
+                	$ageDisplay = $age . ' Y';
+        	} elseif($age_type == 'months'){
+                	$ageDisplay = $age . ' M';
+        	} else {
+                	$ageDisplay = $age . ' D';
+        	}
+	}
+
+	$date = date('d M Y', strtotime($appointment['created_date']));
+
+	$vitals = [];
+
+	if(!empty($prescription['vitals_json'])){
+    		$vitals = json_decode($prescription['vitals_json'], true);
+	}
+
+	$vitalsHtml = '';
+
+	if(!empty($vitals)){
+
+    		$labels = [
+        		'height' => ['Height', 'cm'],
+        		'weight' => ['Weight', 'kg'],
+        		'bmi' 	 => ['BMI', ''],
+        		'bp' 	 => ['Blood Pressure', 'mmHg'],
+        		'pulse'  => ['Pulse', 'bpm'],
+        		'rr' 	 => ['Respiratory Rate', '/min'],
+        		'spo2' 	 => ['O2 Saturation', '%']
+    		];
+
+    		foreach($vitals as $key => $value){
+
+        		if(trim($value) == ''){
+            			continue;
+        		}
+
+        		$label = isset($labels[$key]) ? $labels[$key][0] : ucfirst($key);
+        		$unit  = isset($labels[$key]) ? $labels[$key][1] : '';
+
+        		$vitalsHtml .= '
+            			<span class="vital-inline">
+                			<b>'.$label.':</b> '.$value.' '.$unit.'
+            			</span>
+        		';
+    		}
+	}
+
+	$complaintsHtml = '';
+
+	if(!empty($prescription['complaints_json'])){
+
+    		$complaints = json_decode($prescription['complaints_json'], true);
+
+    		if(!empty($complaints)){
+
+        		$first = true;
+
+        		foreach($complaints as $c){
+
+            			if(trim($c) == '') continue;
+
+				$text = htmlspecialchars($c);
+
+            			if($first){
+                			$complaintsHtml .= '<div class="complaint-line"><span class="complaint-label">Complaints:</span><span class="complaint-value">'.$text.'</span></div>';
+                			$first = false;
+            			} else {
+                			$complaintsHtml .= '<div class="complaint-line indent"><span class="complaint-value">'.$text.'</span></div>';
+            			}
+        		}
+    		}
+	}
+
+	$diagnosisHtml = '';
+
+	if(!empty(trim($prescription['diagnosis']))){
+
+		$diagnosisText = htmlspecialchars($prescription['diagnosis']);
+
+    		$diagnosisHtml = '<div class="diagnosis-line"><span class="diagnosis-label">Diagnosis:</span><span class="diagnosis-value">'.$diagnosisText.'</span></div>';
+	}
+
+	$medicationsHtml = '';
+
+	if(!empty($prescription['medications_json'])){
+
+    		$meds = json_decode($prescription['medications_json'], true);
+
+    		if(!empty($meds)){
+
+			$medicationsHtml .= '<div class="medications-row"><span class="label">Medications:</span></div>';
+
+        		$medicationsHtml .= '
+        			<table class="med-table">
+            				<thead>
+                				<tr>
+                    					<th>No</th>
+                    					<th>Medicine</th>
+                    					<th>M</th>
+                    					<th>A</th>
+                    					<th>E</th>
+                    					<th>N</th>
+                    					<th>Duration</th>
+                    					<th>Advice</th>
+							<th>Remarks</th>
+                				</tr>
+            				</thead>
+            			<tbody>
+        		';
+
+        		$i = 1;
+
+        		foreach($meds as $m){
+
+				$medicine = htmlspecialchars($m['medicine']);
+
+            			if(empty($m['medicine'])) continue;
+
+            			$morning   = $m['morning'] ?? '';
+            			$afternoon = $m['afternoon'] ?? '';
+            			$evening   = $m['evening'] ?? '';
+            			$night     = $m['night'] ?? '';
+
+            			$duration = '';
+            			if(!empty($m['duration'])){
+                			$duration = $m['duration'].' '.ucfirst($m['duration_type']);
+            			}
+
+            			$advice = $m['advise'] ?? '';
+
+				$remarks = $m['remarks'] ?? '';
+
+            			$medicationsHtml .= "
+                			<tr>
+                    				<td>{$i}</td>
+                    				<td>{$medicine}</td>
+                    				<td>{$morning}</td>
+                    				<td>{$afternoon}</td>
+                    				<td>{$evening}</td>
+                    				<td>{$night}</td>
+                    				<td>{$duration}</td>
+                    				<td>{$advice}</td>
+						<td>{$remarks}</td>
+                			</tr>
+            			";
+
+            			$i++;
+        		}
+
+        		$medicationsHtml .= '</tbody></table>';
+    		}
+	}
+
+	
+
+        $replace = array(
+            "%DOCTOR_NAME%" 		=> $doctorName,
+	    "%DOCTOR_CATEGORY%"		=> $doctorCategoryHtml,
+	    "%DOCTOR_DESCRIPTION%"	=> $doctorDescriptionHtml,
+	    "%CLINIC_BANNER%"		=> $clinicBanner,
+	    "%CLINIC_INFO%"		=> $clinicInfoHtml,
+	    "%PATIENT_NAME%" 		=> $patientName,
+	    "%PATIENT_AGE%" 		=> $ageDisplay,
+	    "%PATIENT_GENDER%" 		=> $gender,
+	    "%PRESCRIPTION_DATE%" 	=> $date,
+	    "%VITALS%"			=> $vitalsHtml,
+	    "%COMPLAINTS%"		=> $complaintsHtml,
+	    "%DIAGNOSIS%"		=> $diagnosisHtml,
+	    "%MEDICATIONS%"		=> $medicationsHtml,
+	    "%INVESTIGATIONS%"		=> $investigationHtml
+        );
+
+        $filePath = DIR_TMPL.$this->module."/".$this->module.".tpl.php";
+
+        $tpl = new MainTemplater($filePath);
+        $tpl = $tpl->parse();
+
+        return str_replace(array_keys($replace), array_values($replace), $tpl);
+    }
+}

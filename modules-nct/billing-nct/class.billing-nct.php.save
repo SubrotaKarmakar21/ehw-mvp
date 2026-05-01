@@ -1,0 +1,18 @@
+<?php
+
+class Billing {
+
+    public function __construct($module = "", $reqData = array()){
+        foreach ($GLOBALS as $key => $values) {
+            $this->$key = $values;
+        }
+
+        $this->module = $module;
+        $this->reqData = $reqData;
+    }
+
+    
+
+}
+
+?>

@@ -1,0 +1,222 @@
+<?php
+
+class PrescriptionView {
+
+    public function __construct($module = "", $reqData = array()){
+        foreach ($GLOBALS as $key => $values) {
+            $this->$key = $values;
+        }
+
+        $this->module = $module;
+        $this->reqData = $reqData;
+    }
+
+    public function getPageContent(){
+
+        global $db, $sessUserId;
+
+        $prescription_id = isset($_GET['prescription_id']) ? (int)$_GET['prescription_id'] : 0;
+
+        if($prescription_id <= 0){
+            return "Invalid Prescription";
+        }
+
+        $prescription = $db->pdoQuery("
+            SELECT doctor_id, appointment_id
+            FROM tbl_prescriptions
+            WHERE id = ".$prescription_id."
+            LIMIT 1
+        ")->result();
+
+        if(empty($prescription)){
+            return "Prescription not found";
+        }
+
+        $doctor = $db->pdoQuery("
+    		SELECT
+        	CONCAT(d.first_name,' ',d.last_name) AS doctor_name,
+        	GROUP_CONCAT(t.name SEPARATOR ', ') AS doctor_category,
+        	d.doctor_description,
+        	c.clinic_banner,
+		c.address,
+		c.phone_no
+
+    		FROM tbl_users d
+
+    		LEFT JOIN tbl_users c ON c.id = d.parent_id
+
+    		LEFT JOIN tbl_users_doctor_type udt ON udt.user_id = d.id
+
+    		LEFT JOIN tbl_type_of_doctors t ON t.id = udt.type_of_doctor_id
+
+    		WHERE d.id = ".$prescription['doctor_id']."
+    		GROUP BY d.id
+	")->result();
+
+        $doctorName = !empty($doctor) ? "Dr. ".$doctor['doctor_name'] : "Doctor";
+
+	$doctorCategory = "";
+
+	if(!empty($doctor['doctor_category'])){
+    		$categories = explode(", ", $doctor['doctor_category']);
+
+    		$categories = array_slice($categories, 0, 3);
+
+    		$doctorCategory = implode(", ", $categories);
+	}
+
+	$doctorDescription = !empty($doctor['doctor_description']) ? $doctor['doctor_description'] : "";
+
+	$doctorCategoryHtml = "";
+	if(!empty($doctorCategory)){
+    		$doctorCategoryHtml = '<div class="doctor-meta">'.$doctorCategory.'</div>';
+	}
+
+	$doctorDescriptionHtml = "";
+	if(!empty($doctorDescription)){
+    		$doctorDescriptionHtml = '<div class="doctor-desc">'.$doctorDescription.'</div>';
+	}
+
+	$clinicBanner = "";
+
+	if(!empty($doctor['clinic_banner'])){
+		$clinicBanner = SITE_UPD."clinicBanner-nct/".$doctor['clinic_banner'];
+	}
+
+	$clinicInfoHtml = "";
+
+	if(!empty($doctor['address'])){
+    		$clinicInfoHtml .= '<div class="clinic-address">'.$doctor['address'].'</div>';
+	}
+
+	if(!empty($doctor['phone_no'])){
+    		$clinicInfoHtml .= '<div class="clinic-phone"><b>Contact No:</b> '.$doctor['phone_no'].'</div>';
+	}
+
+	$appointment = $db->pdoQuery("
+    		SELECT first_name, last_name, gender, date_of_birth, created_date
+    		FROM tbl_appointment
+    		WHERE id = ".$prescription['appointment_id']."
+    		LIMIT 1
+	")->result();
+
+	$patientName = $appointment['first_name'].' '.$appointment['last_name'];
+
+	$gender = ucfirst($appointment['gender']);
+
+	$age = '';
+$age_type = 'years';
+
+if(!empty($appointment['date_of_birth'])){
+
+        $dob = new DateTime($appointment['date_of_birth']);
+        $now = new DateTime();
+
+        $dob->setTime(0,0,0);
+        $now->setTime(0,0,0);
+
+        $diff = $now->diff($dob);
+
+        if ($diff->y > 0) {
+                $age = $diff->y;
+                $age_type = 'years';
+        } elseif ($diff->m > 0) {
+                $age = $diff->m;
+                $age_type = 'months';
+        } else {
+                $age = $diff->d;
+                $age_type = 'days';
+        }
+}1~$age = '';
+$age_type = 'years';
+
+if(!empty($appointment['date_of_birth'])){
+
+        $dob = new DateTime($appointment['date_of_birth']);
+        $now = new DateTime();
+
+        $dob->setTime(0,0,0);
+        $now->setTime(0,0,0);
+
+        $diff = $now->diff($dob);
+
+        if ($diff->y > 0) {
+                $age = $diff->y;
+                $age_type = 'years';
+        } elseif ($diff->m > 0) {
+                $age = $diff->m;
+                $age_type = 'months';
+        } else {
+                $age = $diff->d;
+                $age_type = 'days';
+        }
+}1~$age = '';
+$age_type = 'years';
+
+if(!empty($appointment['date_of_birth'])){
+
+        $dob = new DateTime($appointment['date_of_birth']);
+        $now = new DateTime();
+
+        $dob->setTime(0,0,0);
+        $now->setTime(0,0,0);
+
+        $diff = $now->diff($dob);
+
+        if ($diff->y > 0) {
+                $age = $diff->y;
+                $age_type = 'years';
+        } elseif ($diff->m > 0) {
+                $age = $diff->m;
+                $age_type = 'months';
+        } else {
+                $age = $diff->d;
+                $age_type = 'days';
+        }
+}1~$age = '';
+$age_type = 'years';
+
+if(!empty($appointment['date_of_birth'])){
+
+        $dob = new DateTime($appointment['date_of_birth']);
+        $now = new DateTime();
+
+        $dob->setTime(0,0,0);
+        $now->setTime(0,0,0);
+
+        $diff = $now->diff($dob);
+
+        if ($diff->y > 0) {
+                $age = $diff->y;
+                $age_type = 'years';
+        } elseif ($diff->m > 0) {
+                $age = $diff->m;
+                $age_type = 'months';
+        } else {
+                $age = $diff->d;
+                $age_type = 'days';
+        }
+}
+
+	$date = date('d M Y', strtotime($appointment['created_date']));
+
+        $replace = array(
+            "%DOCTOR_NAME%" 		=> $doctorName,
+	    "%DOCTOR_CATEGORY%"		=> $doctorCategoryHtml,
+	    "%DOCTOR_DESCRIPTION%"	=> $doctorDescriptionHtml,
+	    "%CLINIC_BANNER%"		=> $clinicBanner,
+	    "%CLINIC_INFO%"		=> $clinicInfoHtml
+	    "%PATIENT_NAME%" 		=> $patientName,
+	    "%PATIENT_AGE%" 		=> $age,
+	    "%PATIENT_GENDER%" 		=> $gender,
+	    "%PRESCRIPTION_DATE%" 	=> $date
+        );
+
+        $filePath = DIR_TMPL.$this->module."/".$this->module.".tpl.php";
+
+        $tpl = new MainTemplater($filePath);
+        $tpl = $tpl->parse();
+
+        return str_replace(array_keys($replace), array_values($replace), $tpl);
+    }
+}

@@ -1,0 +1,47 @@
+/*Added by krishna marakana*/
+
+.error{
+	color: red;
+}
+.hidden{
+    display: none !important;
+}
+.k-pointer-only{
+    cursor: pointer !important;
+}
+.pt-doctor-name{
+    padding-bottom: 10px !important;
+}
+
+.google-center-btn {
+    display: flex !important;
+    justify-content: center !important;
+}
+
+.google-center-btn iframe {
+    margin: 0 auto !important;
+}
+
+.form-check .form-check-input {position:relative;}
+
+.profile-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+/* Make crop box circular */
+#crop_profile_cover_modal .cropper-view-box,
+#crop_profile_cover_modal .cropper-face {
+    border-radius: 50%;
+}
+
+/* Smooth dark overlay outside circle */
+#crop_profile_cover_modal .cropper-modal {
+    background-color: rgba(0, 0, 0, 0.65);
+}
+
+/* Center image nicely */
+#crop_profile_cover_modal .img-container img {
+    max-width: 100%;
+}
