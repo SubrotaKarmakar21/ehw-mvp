@@ -6,11 +6,8 @@ require_once "class.my_patients-nct.php";
 
 $winTitle = 'My Patients ' . SITE_NM;
 $headTitle = 'My Patients' . SITE_NM;
-$metaTag = getMetaTags(array(
-	"description" => $winTitle,
-	"keywords" => $headTitle,
-	"author" => AUTHOR
-));
+$metaTag = getMetaTags(array("description" => $winTitle,"keywords" => $headTitle,"author" => AUTHOR));
+
 $obj = new MyPatients($module,$_REQUEST);
 
 $response['status'] = '0';
@@ -35,7 +32,7 @@ if(isset($_POST['action']) && $_POST['action'] == 'get_my_items'){
     echo json_encode($content);
     exit;
 } else if (isset($_POST['action']) && $_POST['action'] == 'delete_patient') {
-    $id = isset($_REQUEST['id']) && $_REQUEST['id'] != '' ? decryptIt($_REQUEST['id']) : 0;
+    $id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
     $old_image = getTableValue('tbl_users','profile_photo',array('id' => $id));
 
     if ($old_image != '') {
@@ -56,7 +53,7 @@ if(isset($_POST['action']) && $_POST['action'] == 'get_my_items'){
     $db->delete('tbl_users_specialties',array('user_id' => $id));
     $db->delete('tbl_users_doctor_type',array('user_id' => $id));
     $db->delete('tbl_users_time_slot',array('user_id' => $id));
-    $db->delete('tbl_users',array('id' => $id));
+    $db->pdoQuery("DELETE FROM tbl_users WHERE id = ".$id." AND parent_id = ".$sessUserId."");
 
     $response['status'] = true;
     $response['message'] = 'Record successfully deleted';
